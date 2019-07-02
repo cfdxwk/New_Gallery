@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>{{ album_name }}</h2>
+    <ol>
+    {% for post in posts %}
+      {% if (post.is_private==0) or (current_user.id==post.user_id) %}
+    
+        <li>
+          <a href="{{ url_for('static', filename='all_posts/' + post.image_file) }}" title="Click to view" target="_blank" style="text-decoration: none;">
+         	  <img width="100px" height="100px" src="{{ url_for('static', filename='all_posts/' + post.image_file) }}">
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            {% if post.id in liked_posts %}
+            <a href="{{ url_for('like_post',post_id=post.id) }}" ><i class="fa fa-star"></i></a>
+            {% else %}
+            <a href="{{ url_for('like_post',post_id=post.id) }}" title="Like Post"><i class="fa fa-star-o"></i></a>
+            {% endif %}
+            &nbsp;
+    
+            {% if current_user.is_authenticated and current_user.id==post.user_id%}
+              <a href="{{ url_for('.delete_post',post_id=post.id) }}" title="Delete post"><i class="fa fa-trash"></i></a>
+            {% endif %}
+            <br>
+            <i class="fa fa-folder"></i><span style="font-size: 22px;margin-left: 10px;"><b>{{ post.title }}</b></span>
+            <br>
+            <i class="fa fa-star"></i><span style="font-size: 12px;margin-left: 10px;">{{ post.likes }} Likes</span>
+            <br>
+            <i class="fa fa-clock-o"></i><span style="font-size: 12px;margin-left: 10px;">{{ post.date_posted }}</span>
+          </a>
+          
+          <br>
+          <br>
+        </li>
+      {% endif %}
+    {% endfor %}
+    <!-- give a option for uploading an image -->
+    <!--Give this option only when number of photos aren't exceeding 1000 -->
+    <a href="{{ url_for('new_post', album_id=album_id) }}"><i class="fa fa-plus"></i><b> New Post</b></a>
+    
+{% endblock content %}

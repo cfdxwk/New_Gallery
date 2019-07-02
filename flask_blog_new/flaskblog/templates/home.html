@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block content %}
+  <h2>Albums</h2>
+  <br>
+  	<ol>
+    {% for album in albums %}
+      {% if (album.is_private==0) or (current_user.id==album.user_id) %}
+	  <li>
+	  <a href="{{ url_for('.album', album_id=album.id) }}" title="Click to view posts" style="text-decoration: none;">
+		<img width="100px" height="100px" src="{{ url_for('static', filename='album_cover/' + album.cover_pic) }}">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		{% if album.id in liked_albums %}
+		<a href="{{ url_for('like_album',album_id=album.id) }}"><i class="fa fa-star"></i></a>
+		{% else %}
+		<a href="{{ url_for('like_album',album_id=album.id) }}" title="Like album"><i class="fa fa-star-o"></i></a>
+		{% endif %}
+		&nbsp;
+		{% if current_user.is_authenticated and current_user.id==album.user_id%}
+			<a href="{{ url_for('update_album',album_id=album.id) }}" title="Update album"><i class="fa fa-edit"></i></a>
+			&nbsp;
+			<a href="{{ url_for('delete_album',album_id=album.id) }}" title="Delete album"><i class="fa fa-trash"></i></a>
+		{% endif %}	
+		<br>
+      	<i class="fa fa-folder"></i><span style="font-size: 22px;margin-left: 10px;"><b>{{ album.album_name }}</b></span>
+      	<br>
+      	<i class="fa fa-star"></i><span style="font-size: 12px;margin-left: 10px;">{{ album.likes }} Likes</span>
+      	<br>
+      	<i class="fa fa-clock-o"></i><span style="font-size: 12px;margin-left: 10px;">{{ album.date_created }}</span>
+
+      </a>
+      <br><br>
+  	</li>
+  	{% endif %}	
+		
+     {% endfor %}
+    </ol>
+    <!-- give an option for creating a new album-->
+    <a href="{{ url_for('.new_album') }}"><i class="fa fa-plus"></i><b> New Album</b></a>
+    
+{% endblock content %}
